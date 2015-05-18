@@ -1,0 +1,28 @@
+{
+	"name": "daniel-ac-martin/word-ladder",
+	"type": "project",
+	"description": "A command-line program and library for solving word ladder puzzles.",
+	"keywords": ["word", "ladder", "solver", "word ladder", "word ladder solver"],
+	"homepage": "https://github.com/daniel-ac-martin/word-ladder",
+	"license": "GNU GPL",
+	"authors": [
+		{
+			"name": "Daniel A.C. Martin",
+			"homepage": "http://dacm.org",
+			"email": "word-ladder@dacm.org",
+			"role": "Creator/Developer"
+		}
+	],
+    "bin": ["bin/word-ladder"],
+    "require": {
+        "daniel-ac-martin/php-seids": "~1.0"
+    },
+	"require-dev": {
+		"squizlabs/php_codesniffer": "2.3.x"
+	},
+	"autoload": {
+		"psr-4": {
+			"WordLadder\\": "src/WordLadder"
+		}
+	}
+}

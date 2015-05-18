@@ -1,0 +1,114 @@
+#! /usr/bin/php
+<?php
+
+/*
+ * Copyright (C) 2015 Daniel A.C. Martin.
+ * This file is part of word-ladder.
+ * 
+ * word-ladder is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * word-ladder is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with word-ladder.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+define('PROGRAM_NAME', basename(__FILE__));
+define('N', "\n");
+
+require_once __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
+
+if
+(
+	   empty($argv)
+	|| (count($argv) < 3)
+	|| (count($argv) > 4)
+)
+{
+	echo 'Usage: ' . PROGRAM_NAME . ' START FINISH [STEPS]' . N;
+	exit(1);
+}
+else if(strlen($argv[1]) != strlen($argv[2]))
+{
+	echo 'Error: Both words must be the same size.' . N;
+	exit(2);
+}
+else
+{
+	$solution = null;
+	$start    = $argv[1];
+	$finish   = $argv[2];
+	$steps    = isset($argv[3]) ? $argv[3] : null;
+	
+	echo 'Attempting: ' . $argv[1] . ' -> ' . $argv[2] . N;
+	
+	try
+	{
+		$solution = WordLadder\WordLadder::solve($start, $finish, $steps, true);
+	}
+	catch(Exception $e)
+	{
+		echo 'Error: ' . $e->getMessage() . N;
+		exit(3);
+	}
+	
+	$s = $solution->solution();
+	
+	echo 'First solution set (' . (count($s) - 1) . ' steps) found after ' . $solution->lookups() . ' lookups:' . N;
+	
+	print_solution($solution->solution());
+	
+	echo '[Prevalence score: ' . $solution->prevalenceScore($solution) . ']' . N;
+	echo 'Finding and analysing all solutions...';
+	
+	try
+	{
+		$solution = WordLadder\WordLadder::solve($start, $finish, $steps);
+	}
+	catch(Exception $e)
+	{
+		echo 'Error: ' . $e->getMessage() . N;
+		exit(4);
+	}
+	
+		
+	echo ' Done.' . N . N;
+	echo $solution->setSize() . ' solution(s) found.' . N . N;
+	
+	print_solution($solution->solution());
+	
+	echo N . '[Prevalence score: ' . $solution->prevalenceScore() . ']' . N;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Functions
+////////////////////////////////////////////////////////////////////////////////
+
+function print_word($number, $word)
+{
+	$v = $word->word();
+	$g = $word->definition();
+	
+	$glossary_space = 73 - strlen($v);
+	$glossary = ($glossary_space >= strlen($g)) ? $g
+	                                            : substr($g, 0, $glossary_space - 3) . '...';
+	echo $number . ': ' . $v . '  [' . $glossary . ']' . N;
+}
+
+function print_solution($solution)
+{
+	$n = 0;
+	
+	foreach($solution as $e)
+	{
+		print_word($n++, $e);
+	}
+}
+
+?>

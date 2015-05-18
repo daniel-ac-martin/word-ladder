@@ -1,0 +1,76 @@
+#! /usr/bin/php
+<?php
+
+/*
+ * Copyright (C) 2015 Daniel A.C. Martin.
+ * This file is part of word-ladder.
+ * 
+ * word-ladder is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * word-ladder is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with word-ladder.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+define('N',           "\n");
+define('DS',          DIRECTORY_SEPARATOR);
+define('PROJECT_DIR', __DIR__ . DS . '..');
+define('PHAR_NAME',   'word-ladder.phar');
+define('PHAR_DIR',    PROJECT_DIR . DS . 'build');
+define('PHAR',        PHAR_DIR . DS . PHAR_NAME);
+
+// Delete old phar
+if(file_exists(PHAR))
+{
+	unlink(PHAR);
+}
+
+// Create build directory if it does not exist
+if(!file_exists(PHAR_DIR))
+{
+	mkdir(PHAR_DIR);
+}
+else if(!is_dir(PHAR_DIR))
+{
+	echo 'Error: ' . PHAR_DIR . ' is not a directory.' . n;
+	exit(1);
+}
+
+$phar = new Phar
+(
+	PHAR,
+	FilesystemIterator::CURRENT_AS_FILEINFO | FilesystemIterator::KEY_AS_FILENAME,
+	PHAR_NAME
+);
+
+// Add includes
+$phar->buildFromIterator(new RecursiveIteratorIterator(new RecursiveDirectoryIterator(PROJECT_DIR . DS . 'data')), PROJECT_DIR);
+$phar->buildFromIterator(new RecursiveIteratorIterator(new RecursiveDirectoryIterator(PROJECT_DIR . DS . 'src')),  PROJECT_DIR);
+
+// Add vendors
+$phar->buildFromIterator(new RecursiveIteratorIterator(new RecursiveDirectoryIterator(PROJECT_DIR . DS . 'vendor' . DS . 'daniel-ac-martin' . DS . 'php-seids')), PROJECT_DIR);
+$phar->buildFromIterator(new RecursiveIteratorIterator(new RecursiveDirectoryIterator(PROJECT_DIR . DS . 'vendor' . DS . 'composer')),                            PROJECT_DIR);
+
+$phar['vendor/autoload.php'] = file_get_contents(PROJECT_DIR . DS . 'vendor' . DS . 'autoload.php');
+
+// Add entry point, remove shebang line
+$phar['bin/word-ladder'] = preg_replace('/^[^<]*/', '', file_get_contents(PROJECT_DIR . DS . 'bin' . DS . 'word-ladder'));
+
+$default_stub = $phar->createDefaultStub('bin/word-ladder');
+
+// Write new phar
+$phar->setStub('#! /usr/bin/php' . N . $default_stub);
+
+// Make phar executable
+$perms = fileperms(PHAR);
+
+chmod(PHAR, $perms | 0111);
+
+?>
