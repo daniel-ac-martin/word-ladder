@@ -2,7 +2,7 @@ word-ladder
 ===========
 
 word-ladder is a command-line program and PHP library for solving
-[word ladder problems].
+[word ladder puzzles].
 
 *Word ladder* is a word game invented by [Lewis Caroll]. The player is given two
 words and must find a 'ladder' from one to another on which only one letter is
@@ -114,8 +114,8 @@ Copyright (C) 2015 Daniel A.C. Martin
 
 Distributed under the GNU GPL v3.
 
- [word ladder problems]: http://en.wikipedia.org/wiki/Word_ladder
- [Lewis Caroll]:         http://en.wikipedia.org/wiki/Lewis_Carroll
- [the Phar]:             https://github.com/daniel-ac-martin/word-ladder/releases/download/0.1/word-ladder.phar
- [Composer]:             http://getcomposer.org
+ [word ladder puzzles]: http://en.wikipedia.org/wiki/Word_ladder
+ [Lewis Caroll]:        http://en.wikipedia.org/wiki/Lewis_Carroll
+ [the Phar]:            https://github.com/daniel-ac-martin/word-ladder/releases/download/0.1/word-ladder.phar
+ [Composer]:            http://getcomposer.org
 
