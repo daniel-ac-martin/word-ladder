@@ -36,7 +36,7 @@ valid, modern PHP binary at /usr/bin/php.)
 Program - Usage
 ---------------
 
-	Usage: word-ladder START FINISH [STEPS]
+	Usage: word-ladder.phar START FINISH [STEPS]
 
 The command-line program accepts three parameters, *START*, *FINISH*, and
 *STEPS*, where only the third, *STEPS* is optional.
@@ -49,7 +49,7 @@ The command-line program accepts three parameters, *START*, *FINISH*, and
 
 Example:
 
-	$ word-ladder git hub
+	$ php word-ladder.phar git hub
 	Attempting: git -> hub
 	First solution set (3 steps) found after 2 lookups:
 	0: git  [a person who is deemed to be despicable or contemptible; "only a ro...]
